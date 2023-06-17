@@ -23,6 +23,10 @@ public final class STTabbar: UITabBar {
     @IBInspectable public var tabbarColor: UIColor = UIColor.lightGray
     @IBInspectable public var unselectedItemColor: UIColor = UIColor.white
 
+    @IBInspectable public var labelTitle: String?
+    @IBInspectable public var label: UILabel?
+
+    
     private var shapeLayer: CALayer?
     
     private func addShape() {
@@ -44,8 +48,8 @@ public final class STTabbar: UITabBar {
             self.layer.insertSublayer(shapeLayer, at: 0)
         }
         self.shapeLayer = shapeLayer
-        self.tintColor = centerButtonColor
-        self.unselectedItemTintColor = unselectedItemColor
+//        self.tintColor = centerButtonColor
+//        self.unselectedItemTintColor = unselectedItemColor
         self.setupMiddleButton()
     }
     
@@ -97,9 +101,32 @@ public final class STTabbar: UITabBar {
         centerButton.backgroundColor = centerButtonColor
         centerButton.tintColor = UIColor.white
 
+        //drop shadow
+        centerButton.layer.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.15).cgColor
+        centerButton.layer.shadowOpacity = 0.8
+        centerButton.layer.shadowRadius = 3.0
+        centerButton.layer.shadowOffset = CGSize(width: 1.0, height: 1.0)
+        centerButton.clipsToBounds = true
+        centerButton.layer.masksToBounds = false
+
+        
         //add to the tabbar and add click event
         self.addSubview(centerButton)
         centerButton.addTarget(self, action: #selector(self.centerButtonAction), for: .touchUpInside)
+        
+        
+        // Add badge label
+        label = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        label?.center = CGPoint(x: centerButton.frame.origin.x + centerButtonHeight - 10, y: centerButton.frame.origin.y + 5)
+        label?.textAlignment = .center
+        label?.text = ""
+        label?.backgroundColor = UIColor(red: 244/255, green: 186/255, blue: 69/255, alpha: 1.0)
+        label?.textColor = .black
+        label?.layer.cornerRadius = (label?.frame.size.height ?? 0) / 2
+        label?.layer.masksToBounds = true
+        label?.font = UIFont(name: "LoewNextArabic-Medium", size: 13)
+        label?.isHidden = true
+        self.addSubview(label ?? UILabel())
     }
     
     // Menu Button Touch Action
